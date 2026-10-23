@@ -1,34 +1,71 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+
 import Navbar from "./components/Navbar";
+
 import Home from "./pages/Home";
 import Recipes from "./pages/Recipes";
 import RecipeDetails from "./pages/RecipeDetails";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import MyRecipes from "./pages/MyRecipes";
+import Favorites from "./pages/Favorites";
+import Login from "./pages/Login";
 
-function About() {
-  return <h1>About Page</h1>;
-}
+import { AuthProvider } from "./context/AuthContext";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
-function Contact() {
-  return <h1>Contact Page</h1>;
-}
+function AppRoutes() {
+  const location = useLocation();
 
-function Login() {
-  return <h1>Login Page</h1>;
+  const isAuthPage = location.pathname === "/login";
+
+  return (
+    <>
+      {!isAuthPage && <Navbar />}
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route path="/recipes" element={<Recipes />} />
+        <Route path="/recipes/:id" element={<RecipeDetails />} />
+
+        <Route path="/my-recipes" element={<MyRecipes />} />
+        <Route path="/favorites" element={<Favorites />} />
+
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/signup"
+          element={<Navigate to="/login" replace />}
+        />
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+      </Routes>
+    </>
+  );
 }
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/recipes" element={<Recipes />} />
-        <Route path="/recipes/:id" element={<RecipeDetails />}/>
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <AuthProvider>
+        <FavoritesProvider>
+          <AppRoutes />
+        </FavoritesProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
