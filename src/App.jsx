@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter,
   Navigate,
@@ -17,6 +16,7 @@ import Contact from "./pages/Contact";
 import MyRecipes from "./pages/MyRecipes";
 import Favorites from "./pages/Favorites";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 import { AuthProvider } from "./context/AuthContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
@@ -24,7 +24,9 @@ import { FavoritesProvider } from "./context/FavoritesContext";
 function AppRoutes() {
   const location = useLocation();
 
-  const isAuthPage = location.pathname === "/login";
+  const isAuthPage =
+    location.pathname === "/login" ||
+    location.pathname === "/signup";
 
   return (
     <>
@@ -32,7 +34,6 @@ function AppRoutes() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipes/:id" element={<RecipeDetails />} />
 
@@ -43,11 +44,7 @@ function AppRoutes() {
         <Route path="/contact" element={<Contact />} />
 
         <Route path="/login" element={<Login />} />
-
-        <Route
-          path="/signup"
-          element={<Navigate to="/login" replace />}
-        />
+        <Route path="/signup" element={<Signup />} />
 
         <Route
           path="*"
@@ -59,14 +56,18 @@ function AppRoutes() {
 }
 
 function App() {
+  const basename = import.meta.env.PROD
+    ? "/Foodiehub"
+    : "/";
+
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <FavoritesProvider>
+    <AuthProvider>
+      <FavoritesProvider>
+        <BrowserRouter basename={basename}>
           <AppRoutes />
-        </FavoritesProvider>
-      </AuthProvider>
-    </BrowserRouter>
+        </BrowserRouter>
+      </FavoritesProvider>
+    </AuthProvider>
   );
 }
 
