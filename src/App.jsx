@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter,
   Navigate,
@@ -16,7 +17,6 @@ import Contact from "./pages/Contact";
 import MyRecipes from "./pages/MyRecipes";
 import Favorites from "./pages/Favorites";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 
 import { AuthProvider } from "./context/AuthContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
@@ -34,6 +34,7 @@ function AppRoutes() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipes/:id" element={<RecipeDetails />} />
 
@@ -44,7 +45,12 @@ function AppRoutes() {
         <Route path="/contact" element={<Contact />} />
 
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+
+        {/* Login page already includes the Signup toggle */}
+        <Route
+          path="/signup"
+          element={<Navigate to="/login" replace />}
+        />
 
         <Route
           path="*"
@@ -56,9 +62,7 @@ function AppRoutes() {
 }
 
 function App() {
-  const basename = import.meta.env.PROD
-    ? "/Foodiehub"
-    : "/";
+  const basename = import.meta.env.PROD ? "/Foodiehub" : "/";
 
   return (
     <AuthProvider>
